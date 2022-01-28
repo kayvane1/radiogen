@@ -1,6 +1,6 @@
 from src.weather import weather_data
 from src.text_generator import generate_text
-from src.audio_generation import audio
+from src.audio_generation import generate_audio
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Initiating Weather data generator')
