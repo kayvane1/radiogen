@@ -1,6 +1,6 @@
 # Seasonal Generative Radio
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oGoPAI4c56ewo1kkjyVLwWw-9Skp3SS8?usp=sharing]
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1oGoPAI4c56ewo1kkjyVLwWw-9Skp3SS8?usp=sharing)
 
 
 Seasonal Generative Radio is a submission for Kontinuum 2022, which combines the changing seasons throughout the year with a well known composition by Vivaldi (Four Seasons) to generate a unique and ever evolving composition which will play for 365 days in a row if selected by the panel. The musical generation is supplemented with artificially generated narration, which is programmatically triggered to play every hour, similar to a radio presenter.
