@@ -1,8 +1,6 @@
 from src.weather import weather_data
 from src.text_generator import generate_text
 
-openweathermap_api_key='8458b5577cf4f9def5c7292da75835a4'
-
 logging.basicConfig(level=logging.INFO)
 logging.info('Initiating Weather data generator')
 
