@@ -1,5 +1,6 @@
 from src.weather import weather_data
 from src.text_generator import generate_text
+from src.audio_generation import audio
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Initiating Weather data generator')
@@ -15,7 +16,7 @@ def main():
     weather = weather_data(args.city)
     temp = weather.get('Temperature Min') / weather.get('Temperature Max')
     text = generate_text(args.prompt, temp, args.max_length)
-    # audio = tts(text)
+    audio = generate_audio(text)
 
 if __name__ == "__main__":
     main()
