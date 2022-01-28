@@ -1,0 +1,10 @@
+
+{
+  "TTS_MODEL" : "tts_model.pth.tar",
+  "TTS_CONFIG" : "config.json",
+  "VOCODER_MODEL" : "vocoder_model.pth.tar",
+  "VOCODER_CONFIG" : "config_vocoder.json",
+  "STATS_PATH" : "./scale_stats_vocoder.npy",
+  "LENGTH_SCALE" : 1,
+  "NOISE SCALE" : 0.33
+}
