@@ -1,0 +1,13 @@
+name: radiogen
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - notebook=6.2.0=py38hecd8cb5_0
+  - numpy=1.19.2=py38h456fd55_0
+  - pandas=1.2.1=py38hb2f4e1b_0
+  - param=1.10.1=pyhd3eb1b0_0
+  - python=3.8.5=h26836e1_1
+  - requests=2.25.1=pyhd3eb1b0_0
+  - streamz=0.6.2=pyhd3eb1b0_0
+  - transformers=4.9.2
