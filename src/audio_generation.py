@@ -86,43 +86,47 @@ VOCODER_CONFIG = load_config(VOCODER_CONFIG)
 
 VOCODER_CONFIG.audio['stats_path'] = config.get("STATS_PATH")
 
-# load the audio processor
-ap = AudioProcessor(**TTS_CONFIG.audio)   
+def generate_audio(text):
 
-# LOAD TTS MODEL
-# multi speaker 
-speakers = []
-speaker_id = None
+    # load the audio processor
+    ap = AudioProcessor(**TTS_CONFIG.audio)   
+
+    # LOAD TTS MODEL
+    # multi speaker 
+    speakers = []
+    speaker_id = None
+        
+    #if 'characters' in TTS_CONFIG.keys():
+    #    symbols, phonemes = make_symbols(**c.characters)
+
+    # load the model
+    num_chars = len(phonemes) if TTS_CONFIG.use_phonemes else len(symbols)
+    model = setup_model(num_chars, len(speakers), TTS_CONFIG)      
+
+    # load model state
+    model, _ =  load_checkpoint(model, TTS_MODEL, use_cuda=use_cuda)
+    model.eval();
+    model.store_inverse();
+
+    # LOAD VOCODER MODEL
+    vocoder_model = setup_generator(VOCODER_CONFIG)
+    vocoder_model.load_state_dict(torch.load(VOCODER_MODEL, map_location="cpu")["model"])
+    vocoder_model.remove_weight_norm()
+    vocoder_model.inference_padding = 0
+
+    # scale factor for sampling rate difference
+    scale_factor = [1,  VOCODER_CONFIG['audio']['sample_rate'] / ap.sample_rate]
+    print(f"scale_factor: {scale_factor}")
+
+    ap_vocoder = AudioProcessor(**VOCODER_CONFIG['audio'])    
+    if use_cuda:
+        vocoder_model.cuda()
+    vocoder_model.eval();
+
+    model.length_scale = config.get("LENGTH_SCALE") # set speed of the speech. 
+    model.noise_scale = config.get("NOISE_SCALE")  # set speech variationd
+
+    # gen_text =  "Bill got in the habit of asking himself “Is that thought true?” and if he wasn’t absolutely certain it was, he just let it go."
+    align, spec, stop_tokens, wav = tts(model, text, TTS_CONFIG, use_cuda, ap, use_gl=False, figures=True)
     
-#if 'characters' in TTS_CONFIG.keys():
-#    symbols, phonemes = make_symbols(**c.characters)
-
-# load the model
-num_chars = len(phonemes) if TTS_CONFIG.use_phonemes else len(symbols)
-model = setup_model(num_chars, len(speakers), TTS_CONFIG)      
-
-# load model state
-model, _ =  load_checkpoint(model, TTS_MODEL, use_cuda=use_cuda)
-model.eval();
-model.store_inverse();
-
-# LOAD VOCODER MODEL
-vocoder_model = setup_generator(VOCODER_CONFIG)
-vocoder_model.load_state_dict(torch.load(VOCODER_MODEL, map_location="cpu")["model"])
-vocoder_model.remove_weight_norm()
-vocoder_model.inference_padding = 0
-
-# scale factor for sampling rate difference
-scale_factor = [1,  VOCODER_CONFIG['audio']['sample_rate'] / ap.sample_rate]
-print(f"scale_factor: {scale_factor}")
-
-ap_vocoder = AudioProcessor(**VOCODER_CONFIG['audio'])    
-if use_cuda:
-    vocoder_model.cuda()
-vocoder_model.eval();
-
-model.length_scale = config.get("LENGTH_SCALE") # set speed of the speech. 
-model.noise_scale = config.get("NOISE_SCALE")  # set speech variationd
-
-# gen_text =  "Bill got in the habit of asking himself “Is that thought true?” and if he wasn’t absolutely certain it was, he just let it go."
-align, spec, stop_tokedns, wav = tts(model, gen_text, TTS_CONFIG, use_cuda, ap, use_gl=False, figures=True)
+    return align, spec, stop_tokens, wav
